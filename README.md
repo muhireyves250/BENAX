@@ -1,73 +1,30 @@
-# React + TypeScript + Vite
+# BENAX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+E-commerce storefront for components, kits and modules. Next.js 16 + Prisma + Postgres + Auth.js.
 
-Currently, two official plugins are available:
+The active project lives in [`benax-next/`](./benax-next/).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick start
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd benax-next
+cp .env.example .env   # then fill in DATABASE_URL and AUTH_SECRET
+npm install
+npm run db:push        # sync Prisma schema to your Postgres
+npm run db:seed        # categories, products, and an admin user
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then visit http://localhost:3000.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The seed admin uses `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env`. Only `ADMIN` users can sign in at `/login` for now.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Stack
+
+- Next.js 16 (App Router, Turbopack) + React 19
+- Tailwind v4 (CSS-based `@theme`)
+- Prisma 7 with the generic `pg` driver adapter (any Postgres works)
+- Auth.js v5 (Credentials, JWT sessions, admin-only)
+- TanStack Query for server-state caching, Zustand (`persist` + `skipHydration`) for client-only cart/wishlist
+
+See [`CLAUDE.md`](./CLAUDE.md) for architecture notes and `benax-next/AGENTS.md` for Next 16 gotchas.
