@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { Search, ChevronRight, Cpu, Radio, Wifi, Bot, Sliders, Wrench, Boxes } from "lucide-react";
 import { prisma } from "@/lib/prisma";
