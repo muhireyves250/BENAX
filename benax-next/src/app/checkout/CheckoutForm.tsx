@@ -18,7 +18,7 @@ export function CheckoutForm() {
 
   if (items.length === 0) {
     return (
-      <div className="glass-card rounded-2xl p-md">
+      <div className="glass-card rounded-2xl p-6">
         <p className="text-secondary dark:text-slate-400">
           Your cart is empty. Add a product to check out.
         </p>
@@ -44,8 +44,8 @@ export function CheckoutForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-md">
-      <div className="glass-card rounded-2xl p-md flex flex-col gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <div className="glass-card rounded-2xl p-6 flex flex-col gap-2">
         <h2 className="font-headline font-bold text-on-surface dark:text-inverse-on-surface">
           Order summary
         </h2>

@@ -20,17 +20,22 @@ export default async function EditProductPage({
   const bound = updateProduct.bind(null, product.id);
 
   return (
-    <div className="flex flex-col gap-md">
+    <div className="flex flex-col gap-6">
       <Link
         href="/admin/products"
-        className="text-sm text-secondary hover:text-primary dark:hover:text-inverse-primary inline-flex items-center gap-1"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-text-dim)] hover:text-[var(--color-accent)]"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="h-3.5 w-3.5" />
         Back to products
       </Link>
-      <h1 className="font-headline text-2xl font-bold text-on-surface dark:text-inverse-on-surface">
-        Edit {product.name}
-      </h1>
+      <header>
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-text-faint)]">
+          Edit
+        </p>
+        <h1 className="font-headline text-3xl font-extrabold text-[var(--color-text)]">
+          {product.name}
+        </h1>
+      </header>
       <ProductForm
         action={bound}
         categories={categories}

@@ -21,7 +21,7 @@ export const Card: React.FC<CardProps> = ({
   return (
     <motion.div
       whileHover={hoverEffect ? { y: -4, transition: { duration: 0.2 } } : {}}
-      className={`glass-card rounded-2xl p-md shadow-[0px_4px_20px_rgba(26,43,74,0.02)] hover:shadow-[0px_10px_30px_rgba(26,43,74,0.06)] transition-shadow duration-200 ${className}`}
+      className={`glass-card rounded-2xl p-6 shadow-[0px_4px_20px_rgba(26,43,74,0.02)] hover:shadow-[0px_10px_30px_rgba(26,43,74,0.06)] transition-shadow duration-200 ${className}`}
       {...props}
     >
       {children}

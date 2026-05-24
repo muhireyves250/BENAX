@@ -21,7 +21,7 @@ export default async function CheckoutSuccessPage({
   if (!order || order.userId !== session.user.id) notFound();
 
   return (
-    <div className="max-w-2xl mx-auto px-md py-lg flex flex-col gap-md text-center items-center">
+    <div className="max-w-2xl mx-auto px-6 py-12 flex flex-col gap-6 text-center items-center">
       <CheckCircle2 className="w-16 h-16 text-emerald-500" />
       <h1 className="font-headline text-3xl font-bold text-on-surface dark:text-inverse-on-surface">
         Order placed
@@ -30,7 +30,7 @@ export default async function CheckoutSuccessPage({
         Order <span className="font-mono font-bold">{order.id}</span> · RWF{" "}
         {order.total.toLocaleString()}
       </p>
-      <div className="glass-card rounded-2xl p-md w-full text-left">
+      <div className="glass-card rounded-2xl p-6 w-full text-left">
         <h2 className="font-headline font-bold mb-2">Items</h2>
         <ul className="divide-y divide-outline-variant/30 dark:divide-slate-800">
           {order.items.map((i) => (

@@ -15,42 +15,42 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || auto;
 
     return (
-      <div className="w-full flex flex-col gap-1 text-left">
+      <div className="w-full flex flex-col gap-1.5 text-left">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-[length:var(--text-label-sm)] font-semibold uppercase tracking-wider text-secondary dark:text-slate-400"
+            className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-text-faint)]"
           >
             {label}
           </label>
         )}
-        <div className="relative rounded-xl">
+        <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[var(--color-text-faint)]">
               {leftIcon}
             </div>
           )}
           <input
             id={inputId}
             ref={ref}
-            className={`block w-full rounded-xl border text-[length:var(--text-body-md)] transition-all duration-200 ${
-              leftIcon ? "pl-10" : "pl-3.5"
-            } pr-3.5 py-2.5 bg-white dark:bg-slate-900 ${
+            className={`block w-full rounded-full border bg-[var(--color-bg-2)] text-sm text-[var(--color-text)] transition-colors duration-150 placeholder:text-[var(--color-text-faint)] ${
+              leftIcon ? "pl-10" : "pl-4"
+            } pr-4 py-2.5 ${
               error
-                ? "border-error text-error placeholder-error/60 focus:outline-none focus:ring-1 focus:ring-error focus:border-error dark:text-rose-200"
-                : "border-outline-variant dark:border-slate-800 text-on-surface dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary dark:focus:ring-inverse-primary dark:focus:border-inverse-primary"
+                ? "border-[var(--color-error)] focus:border-[var(--color-error)] focus:outline-none"
+                : "border-[var(--color-border-soft)] focus:border-[var(--color-accent)] focus:outline-none"
             } ${className}`}
             {...props}
           />
         </div>
         {error && (
-          <p className="text-xs text-error dark:text-rose-400 flex items-center gap-1 mt-0.5 font-medium">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-error" />
+          <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-[var(--color-error)]">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-error)]" />
             {error}
           </p>
         )}
         {!error && helperText && (
-          <p className="text-xs text-secondary dark:text-slate-500">{helperText}</p>
+          <p className="text-xs text-[var(--color-text-faint)]">{helperText}</p>
         )}
       </div>
     );

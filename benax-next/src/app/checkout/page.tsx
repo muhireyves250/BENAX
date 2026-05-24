@@ -11,7 +11,7 @@ export default async function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-md py-lg flex flex-col gap-md">
+    <div className="max-w-2xl mx-auto px-6 py-12 flex flex-col gap-6">
       <Link
         href="/products"
         className="text-sm text-secondary hover:text-primary dark:hover:text-inverse-primary inline-flex items-center gap-1"

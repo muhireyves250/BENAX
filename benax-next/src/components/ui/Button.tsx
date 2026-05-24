@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import type { HTMLMotionProps } from "framer-motion";
 
-type ButtonVariant = "primary" | "secondary" | "tertiary" | "outline" | "text";
+type ButtonVariant = "primary" | "secondary" | "tertiary" | "outline" | "text" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps
@@ -32,30 +32,31 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const base =
-    "inline-flex items-center justify-center font-headline font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none";
+    "inline-flex items-center justify-center font-headline font-semibold rounded-full transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/60 disabled:opacity-50 disabled:cursor-not-allowed select-none";
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      "bg-primary hover:bg-primary/95 text-on-primary dark:bg-inverse-primary dark:hover:bg-inverse-primary/90 dark:text-primary focus:ring-primary shadow-sm",
+      "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-accent-ink)] shadow-[0_8px_30px_-12px_rgba(189,180,255,0.6)]",
     secondary:
-      "bg-secondary hover:bg-secondary/90 text-on-secondary focus:ring-secondary",
+      "bg-[var(--color-surface-2)] hover:bg-[var(--color-surface-3)] text-[var(--color-text)] border border-[var(--color-border-soft)]",
     tertiary:
-      "bg-secondary-container hover:bg-secondary-container/90 text-on-secondary-container focus:ring-secondary-container",
+      "bg-[color-mix(in_oklab,var(--color-accent)_18%,transparent)] hover:bg-[color-mix(in_oklab,var(--color-accent)_28%,transparent)] text-[var(--color-accent)]",
     outline:
-      "border border-outline hover:bg-surface-container-low dark:border-slate-700 text-primary dark:text-primary-fixed-dim focus:ring-outline",
-    text: "text-primary hover:bg-surface-container-low dark:text-primary-fixed-dim focus:ring-transparent",
+      "border border-[var(--color-border)] hover:bg-[var(--color-surface-2)] text-[var(--color-text)]",
+    text: "text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]",
+    ghost:
+      "text-[var(--color-text-dim)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-2)]",
   };
 
   const sizes: Record<ButtonSize, string> = {
-    sm: "px-3 py-1.5 text-[length:var(--text-label-sm)]",
-    md: "px-5 py-2.5 text-[length:var(--text-label-md)]",
-    lg: "px-7 py-3 text-[length:var(--text-label-md)] md:text-[length:var(--text-body-lg)]",
+    sm: "px-3.5 py-1.5 text-xs",
+    md: "px-5 py-2.5 text-sm",
+    lg: "px-7 py-3 text-sm md:text-base",
   };
 
   return (
     <motion.button
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
-      whileHover={{ scale: disabled || isLoading ? 1 : 1.01 }}
+      whileTap={{ scale: disabled || isLoading ? 1 : 0.97 }}
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={disabled || isLoading}
       {...props}

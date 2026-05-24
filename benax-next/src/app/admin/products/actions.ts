@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { saveProductImage } from "@/lib/uploads";
 
 async function requireAdmin() {
   const session = await auth();
@@ -13,7 +14,7 @@ async function requireAdmin() {
   }
 }
 
-const productSchema = z.object({
+const baseSchema = z.object({
   id: z.string().min(1, "ID is required").regex(/^[a-z0-9-]+$/, "Lowercase, digits, hyphens only"),
   name: z.string().min(2),
   categoryId: z.string().min(1),
@@ -21,14 +22,13 @@ const productSchema = z.object({
   stock: z.coerce.number().int().nonnegative(),
   rating: z.coerce.number().min(0).max(5).default(0),
   tag: z.string().optional().nullable(),
-  image: z.url(),
   description: z.string().min(1),
   specs: z.string().optional(),
 });
 
 export type ProductFormState = {
   error?: string;
-  fieldErrors?: Partial<Record<keyof z.input<typeof productSchema>, string>>;
+  fieldErrors?: Partial<Record<keyof z.input<typeof baseSchema> | "image", string>>;
 };
 
 function parseSpecs(raw?: string): Record<string, string> {
@@ -44,12 +44,25 @@ function parseSpecs(raw?: string): Record<string, string> {
   }
 }
 
+async function resolveImage(formData: FormData, prefix: string, existing?: string): Promise<string | { error: string }> {
+  const file = formData.get("imageFile");
+  if (file instanceof File && file.size > 0) {
+    try {
+      return await saveProductImage(file, prefix);
+    } catch (e) {
+      return { error: (e as Error).message };
+    }
+  }
+  if (existing) return existing;
+  return { error: "Image is required" };
+}
+
 export async function createProduct(
   _prev: ProductFormState,
   formData: FormData
 ): Promise<ProductFormState> {
   await requireAdmin();
-  const parsed = productSchema.safeParse(Object.fromEntries(formData));
+  const parsed = baseSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return {
       fieldErrors: Object.fromEntries(
@@ -57,17 +70,27 @@ export async function createProduct(
       ),
     };
   }
-  const { specs, ...rest } = parsed.data;
+
+  const image = await resolveImage(formData, parsed.data.id);
+  if (typeof image !== "string") return { fieldErrors: { image: image.error } };
+
   let parsedSpecs: Record<string, string>;
   try {
-    parsedSpecs = parseSpecs(specs);
+    parsedSpecs = parseSpecs(parsed.data.specs);
   } catch (e) {
     return { fieldErrors: { specs: (e as Error).message } };
   }
 
+  const { specs: _ignored, ...rest } = parsed.data;
   try {
     await prisma.product.create({
-      data: { ...rest, slug: rest.id, specs: parsedSpecs, tag: rest.tag || null },
+      data: {
+        ...rest,
+        slug: rest.id,
+        image,
+        specs: parsedSpecs,
+        tag: rest.tag || null,
+      },
     });
   } catch (e) {
     return { error: (e as Error).message };
@@ -84,7 +107,7 @@ export async function updateProduct(
   formData: FormData
 ): Promise<ProductFormState> {
   await requireAdmin();
-  const parsed = productSchema.safeParse({ ...Object.fromEntries(formData), id });
+  const parsed = baseSchema.safeParse({ ...Object.fromEntries(formData), id });
   if (!parsed.success) {
     return {
       fieldErrors: Object.fromEntries(
@@ -92,18 +115,25 @@ export async function updateProduct(
       ),
     };
   }
-  const { specs, id: _ignored, ...rest } = parsed.data;
+
+  const existing = await prisma.product.findUnique({ where: { id } });
+  if (!existing) return { error: "Product not found" };
+
+  const image = await resolveImage(formData, id, existing.image);
+  if (typeof image !== "string") return { fieldErrors: { image: image.error } };
+
   let parsedSpecs: Record<string, string>;
   try {
-    parsedSpecs = parseSpecs(specs);
+    parsedSpecs = parseSpecs(parsed.data.specs);
   } catch (e) {
     return { fieldErrors: { specs: (e as Error).message } };
   }
 
+  const { specs: _ignored, id: _idIgnored, ...rest } = parsed.data;
   try {
     await prisma.product.update({
       where: { id },
-      data: { ...rest, specs: parsedSpecs, tag: rest.tag || null },
+      data: { ...rest, image, specs: parsedSpecs, tag: rest.tag || null },
     });
   } catch (e) {
     return { error: (e as Error).message };

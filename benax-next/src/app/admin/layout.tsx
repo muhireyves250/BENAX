@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { LogOut, ExternalLink } from "lucide-react";
 import { auth, signOut } from "@/auth";
-import { Button } from "@/components/ui/Button";
+import { AdminSidebarNav } from "./AdminNavLink";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -10,43 +11,67 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-surface-container-low dark:bg-slate-950">
-      <header className="border-b border-outline-variant/60 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-md py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/admin" className="font-headline font-bold text-primary dark:text-inverse-primary">
-              BENAX Admin
-            </Link>
-            <nav className="hidden md:flex gap-4 text-sm">
-              <Link href="/admin" className="text-secondary hover:text-primary dark:hover:text-inverse-primary">
-                Overview
-              </Link>
-              <Link
-                href="/admin/products"
-                className="text-secondary hover:text-primary dark:hover:text-inverse-primary"
-              >
-                Products
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-secondary dark:text-slate-400 hidden sm:inline">
-              {session.user.email}
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-[var(--color-border-soft)] bg-[var(--color-bg-2)] md:flex">
+        <div className="flex items-center gap-2.5 border-b border-[var(--color-border-soft)] px-6 py-5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-extrabold">
+            B
+          </span>
+          <div className="leading-tight">
+            <span className="block font-headline text-sm font-extrabold tracking-[0.18em]">
+              BENAX
             </span>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-faint)]">
+              Admin
+            </span>
+          </div>
+        </div>
+
+        <AdminSidebarNav />
+
+        <div className="border-t border-[var(--color-border-soft)] p-4">
+          <Link
+            href="/"
+            target="_blank"
+            className="mb-3 flex items-center justify-between rounded-xl px-3 py-2 text-xs text-[var(--color-text-dim)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+          >
+            <span>View storefront</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </Link>
+          <div className="rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-1)] p-3">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-accent)_22%,transparent)] font-bold text-[var(--color-accent)]">
+                {session.user.email?.[0]?.toUpperCase() ?? "A"}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-semibold">{session.user.name ?? "Admin"}</p>
+                <p className="truncate text-[10px] text-[var(--color-text-faint)]">
+                  {session.user.email}
+                </p>
+              </div>
+            </div>
             <form
               action={async () => {
                 "use server";
                 await signOut({ redirectTo: "/login" });
               }}
+              className="mt-3"
             >
-              <Button type="submit" variant="outline" size="sm">
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-border)] py-2 text-xs font-semibold text-[var(--color-text-dim)] hover:border-[var(--color-error)] hover:text-[var(--color-error)]"
+              >
+                <LogOut className="h-3.5 w-3.5" />
                 Sign out
-              </Button>
+              </button>
             </form>
           </div>
         </div>
-      </header>
-      <main className="max-w-7xl mx-auto p-md">{children}</main>
+      </aside>
+
+      <main className="md:ml-64">
+        <div className="mx-auto max-w-6xl px-6 py-8 md:px-10 md:py-10">{children}</div>
+      </main>
     </div>
   );
 }

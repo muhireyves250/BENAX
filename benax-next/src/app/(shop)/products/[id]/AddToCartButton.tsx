@@ -21,9 +21,10 @@ export function AddToCartButton({ product }: { product: ProductLite }) {
       onClick={handle}
       size="lg"
       variant={added ? "secondary" : "primary"}
+      className="flex-1"
       leftIcon={added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
     >
-      {added ? "Added to cart" : "Add to cart"}
+      {added ? "Added to cart" : "Add to Cart"}
     </Button>
   );
 }

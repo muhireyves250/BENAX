@@ -1,24 +1,19 @@
-export function Spinner({ label = "Loading…" }: { label?: string }) {
+export function Spinner() {
   return (
-    <div className="h-[60vh] w-full flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-10 w-10 border-4 border-slate-200 border-t-primary rounded-full animate-spin dark:border-slate-800 dark:border-t-inverse-primary" />
-        <span className="text-xs text-secondary font-semibold dark:text-slate-400">{label}</span>
-      </div>
+    <div className="flex h-full min-h-[200px] w-full items-center justify-center">
+      <span className="block h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-accent)]" />
     </div>
   );
 }
 
 export function CardSkeleton() {
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl overflow-hidden animate-pulse">
-      <div className="aspect-square bg-slate-100 dark:bg-slate-800" />
-      <div className="p-md flex flex-col gap-2">
-        <div className="h-3 w-1/4 bg-slate-100 dark:bg-slate-800 rounded" />
-        <div className="h-4 w-3/4 bg-slate-100 dark:bg-slate-800 rounded" />
-        <div className="h-3 w-1/3 bg-slate-100 dark:bg-slate-800 rounded" />
-        <div className="h-8 w-full bg-slate-100 dark:bg-slate-800 rounded mt-2" />
-      </div>
+    <div className="rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-1)] p-6 flex flex-col gap-2">
+      <div className="aspect-square w-full animate-pulse rounded-xl bg-[var(--color-surface-2)]" />
+      <div className="h-4 w-3/4 animate-pulse rounded bg-[var(--color-surface-2)]" />
+      <div className="h-4 w-1/2 animate-pulse rounded bg-[var(--color-surface-2)]" />
     </div>
   );
 }
+
+export default Spinner;

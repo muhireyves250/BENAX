@@ -21,7 +21,7 @@ export function DeleteProductButton({ id, name }: { id: string; name: string }) 
       type="button"
       onClick={handle}
       disabled={pending}
-      className="p-2 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 text-rose-500 disabled:opacity-50"
+      className="rounded-lg p-2 text-[var(--color-text-faint)] hover:bg-[color-mix(in_oklab,var(--color-error)_15%,transparent)] hover:text-[var(--color-error)] disabled:opacity-50"
       aria-label={`Delete ${name}`}
     >
       <Trash2 className="w-4 h-4" />

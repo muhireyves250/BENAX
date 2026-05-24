@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ShoppingCart, User, Sun, Moon } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
 import { useTheme } from "@/app/providers";
@@ -18,20 +19,22 @@ export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const itemCount = useCartStore((s) => s.getItemCount());
   const toggleDrawer = useCartStore((s) => s.toggleDrawer);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
-    <header className="sticky top-0 w-full z-40 bg-white dark:bg-slate-900 border-b border-outline-variant/30 dark:border-slate-800 shadow-[0px_4px_20px_rgba(26,43,74,0.02)]">
-      <div className="flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 w-full max-w-[1280px] mx-auto">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-primary dark:bg-inverse-primary flex items-center justify-center shadow-md">
-            <span className="text-white dark:text-primary font-bold text-lg select-none">B</span>
+    <header className="sticky top-0 z-40 w-full bg-[color-mix(in_oklab,var(--color-bg)_82%,transparent)] backdrop-blur-xl border-b border-[var(--color-border-soft)]">
+      <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between px-4 md:px-12">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--color-accent)] text-[var(--color-accent-ink)] shadow-[0_6px_22px_-8px_rgba(189,180,255,0.7)]">
+            <span className="font-headline text-lg font-extrabold">B</span>
           </div>
-          <span className="font-headline text-xl font-extrabold tracking-tight text-primary dark:text-white">
+          <span className="font-headline text-[1.05rem] font-extrabold tracking-[0.18em] text-[var(--color-text)]">
             BENAX
           </span>
         </Link>
 
-        <nav className="hidden md:flex gap-8">
+        <nav className="hidden md:flex items-center gap-10">
           {NAV_LINKS.map((link) => {
             const active =
               link.path === "/" ? pathname === "/" : pathname.startsWith(link.path);
@@ -39,13 +42,22 @@ export function Navbar() {
               <Link
                 key={link.path}
                 href={link.path}
-                className={`font-headline text-sm transition-colors hover:text-primary dark:hover:text-primary-fixed-dim ${
-                  active
-                    ? "text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary pb-0.5"
-                    : "text-secondary dark:text-secondary-fixed-dim"
-                }`}
+                className="group relative font-headline text-[0.95rem]"
               >
-                {link.name}
+                <span
+                  className={
+                    active
+                      ? "text-[var(--color-accent)]"
+                      : "text-[var(--color-text-dim)] group-hover:text-[var(--color-text)] transition-colors"
+                  }
+                >
+                  {link.name}
+                </span>
+                <span
+                  className={`absolute -bottom-1 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-[var(--color-accent)] transition-all duration-300 ${
+                    active ? "w-6" : "w-0 group-hover:w-3"
+                  }`}
+                />
               </Link>
             );
           })}
@@ -54,29 +66,31 @@ export function Navbar() {
         <div className="flex items-center gap-1">
           <button
             onClick={toggleTheme}
-            className="text-primary dark:text-primary-fixed-dim hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-full transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-text-dim)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] transition-colors"
             aria-label="Toggle theme"
+            suppressHydrationWarning
           >
-            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {mounted &&
+              (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
           </button>
           <button
             onClick={() => toggleDrawer(true)}
-            className="relative text-primary dark:text-primary-fixed-dim hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-full transition-colors"
+            className="relative rounded-full p-2 text-[var(--color-text-dim)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] transition-colors"
             aria-label="Open cart"
           >
-            <ShoppingCart className="w-5 h-5" />
-            {itemCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 bg-error text-on-error text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
+            <ShoppingCart className="h-5 w-5" />
+            {mounted && itemCount > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[10px] font-bold text-[var(--color-accent-ink)]">
                 {itemCount}
               </span>
             )}
           </button>
           <Link
             href="/login"
-            className="text-primary dark:text-primary-fixed-dim hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-full transition-colors"
+            className="rounded-full p-2 text-[var(--color-text-dim)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] transition-colors"
             aria-label="Account"
           >
-            <User className="w-5 h-5" />
+            <User className="h-5 w-5" />
           </Link>
         </div>
       </div>
