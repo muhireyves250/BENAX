@@ -23,17 +23,19 @@ enum OrderStatus {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  name         String
-  role         Role     @default(USER)
-  phone        String?
-  address      String?
-  avatarUrl    String?
-  orders       Order[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  passwordHash        String?
+  name                String
+  role                Role      @default(USER)
+  phone               String?
+  address             String?
+  avatarUrl           String?
+  setupTokenHash      String?
+  setupTokenExpiresAt DateTime?
+  orders              Order[]
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
 
 model Category {
@@ -72,6 +74,8 @@ model Order {
   total           Int
   status          OrderStatus @default(PENDING)
   deliveryAddress String
+  contactName     String
+  contactPhone    String
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 

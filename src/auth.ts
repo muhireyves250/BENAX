@@ -24,10 +24,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const { email, password } = parsed.data;
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return null;
-
-        // Admin-only login gate (regular users can't sign in yet).
-        if (user.role !== "ADMIN") return null;
+        // No account, or a passwordless account (created at checkout but not yet
+        // activated) cannot sign in.
+        if (!user || !user.passwordHash) return null;
 
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok) return null;

@@ -23,7 +23,8 @@ export const authConfig = {
         return false; // redirect to /login (via pages.signIn)
       }
       if (isOnLogin && isLoggedIn) {
-        return Response.redirect(new URL("/admin", nextUrl));
+        const dest = isAdmin ? "/admin" : "/";
+        return Response.redirect(new URL(dest, nextUrl));
       }
       return true;
     },
