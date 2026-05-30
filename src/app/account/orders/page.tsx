@@ -7,8 +7,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AccountOrdersPage() {
   const session = await auth();
+  if (!session?.user?.id) return null;
   const orders = await prisma.order.findMany({
-    where: { userId: session!.user.id },
+    where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },
     include: { items: { include: { product: true } } },
   });
