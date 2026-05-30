@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useCartStore } from "@/stores/useCartStore";
 import { useWishlistStore } from "@/stores/useWishlistStore";
+import { WishlistSync } from "@/components/wishlist/WishlistSync";
 
 type Theme = "light" | "dark";
 
@@ -70,6 +71,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <ZustandHydrator />
+          <WishlistSync />
           {children}
           {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
         </ThemeProvider>

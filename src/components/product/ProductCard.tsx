@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Heart, Check, ShoppingCart, Star } from "lucide-react";
 import { useCartStore } from "@/stores/useCartStore";
-import { useWishlistStore } from "@/stores/useWishlistStore";
+import { useWishlist } from "@/hooks/useWishlist";
 import type { ProductLite } from "@/types/ecommerce";
 
 interface ProductCardProps {
@@ -13,13 +13,11 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
-  const wlHas = useWishlistStore((s) => s.has(product.id));
-  const addWl = useWishlistStore((s) => s.add);
-  const removeWl = useWishlistStore((s) => s.remove);
+  const { has: wlHas, toggle: toggleWl } = useWishlist();
   const [added, setAdded] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const has = mounted && wlHas;
+  const has = mounted && wlHas(product.id);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -32,7 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    has ? removeWl(product.id) : addWl(product);
+    toggleWl(product);
   };
 
   return (

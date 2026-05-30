@@ -8,6 +8,7 @@ interface WishlistState {
   remove: (productId: string) => void;
   has: (productId: string) => boolean;
   clear: () => void;
+  setItems: (items: ProductLite[]) => void;
 }
 
 export const useWishlistStore = create<WishlistState>()(
@@ -21,6 +22,7 @@ export const useWishlistStore = create<WishlistState>()(
       remove: (productId) => set({ items: get().items.filter((p) => p.id !== productId) }),
       has: (productId) => get().items.some((p) => p.id === productId),
       clear: () => set({ items: [] }),
+      setItems: (items) => set({ items }),
     }),
     {
       name: "benax_wishlist",
