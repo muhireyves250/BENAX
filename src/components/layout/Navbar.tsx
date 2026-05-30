@@ -86,7 +86,7 @@ export function Navbar() {
             )}
           </button>
           <Link
-            href="/login"
+            href="/account"
             className="rounded-full p-2 text-[var(--color-text-dim)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] transition-colors"
             aria-label="Account"
           >

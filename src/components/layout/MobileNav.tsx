@@ -9,7 +9,7 @@ const TABS = [
   { name: "Shop", path: "/products", Icon: Store },
   { name: "Categories", path: "/categories", Icon: LayoutGrid },
   { name: "Support", path: "/support", Icon: LifeBuoy },
-  { name: "Profile", path: "/login", Icon: User },
+  { name: "Profile", path: "/account", Icon: User },
 ];
 
 export function MobileNav() {
